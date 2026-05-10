@@ -1,176 +1,353 @@
-# TripWayz – Personalized Travel Planning Platform
+# ✈️ TripWayz – Personalized Travel Planning Platform
 
-Production-oriented travel planning app built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, **Framer Motion**, **Prisma**, **Supabase PostgreSQL & Storage**, **NextAuth.js (credentials)**, **Zod**, **React Hook Form**, **Recharts**, and **Sonner**.
+A production-ready Next.js travel planning application with advanced UI, database modeling, and end-to-end booking functionality.
+
+TripWayz helps users discover destinations, create personalized travel plans, book trips, manage itineraries, upload profile avatars, and share travel experiences publicly. The platform also includes a comprehensive Admin Dashboard with analytics, user management, and booking administration.
+
+---
 
 ## Features
 
-- Email + password authentication with **bcrypt** hashing and **USER / ADMIN** roles
-- **Dashboard** with 20 curated destination cards (imagery, copy, base pricing)
-- **Booking flow**: dates, travelers, budget, travel style, special requests, optional add-ons (activities)
-- **Trip summary** with automatic totals and breakdown
-- **My Trips** with cancel flow and **public share links** (copy + Facebook sharer)
-- **Profile** with Supabase **avatars** uploads (server uses **service role** key)
-- **Admin panel**: KPIs, Recharts analytics, user & booking tables with search + delete
+### ✅ Authentication System
+- Email/password signup and login
+- Secure password hashing with bcryptjs
+- Protected routes with NextAuth.js
+- Session management
+- Role-based access control (USER / ADMIN)
 
-### Default admin (after seed)
+### ✅ Personalized Dashboard
+- Welcome dashboard with travel statistics
+- Featured destinations
+- Quick actions and recommendations
+- Responsive animated cards
 
-- **Email:** `admin@tripwayz.com`
-- **Password:** `Admin@123`
+### ✅ Destination Explorer
+- Browse 20 curated destinations
+- High-quality travel images
+- Detailed descriptions and pricing
+- Search and filtering
 
-Demo user: `demo@tripwayz.com` / `User@123`
+### ✅ Smart Booking Wizard
+- Select destination and travel dates
+- Configure adults and children
+- Choose budget and travel style
+- Optional activities and add-ons
+- Special requests
+- Automatic pricing calculations
+- Real-time trip summary
 
-## Prerequisites
+### ✅ My Trips Management
+- View upcoming and completed trips
+- Cancel bookings
+- Public share links
+- Copy link and Facebook sharing
 
-- Node.js 18+
-- A [Supabase](https://supabase.com/) project (Postgres + Storage)
+### ✅ Profile Management
+- Update user profile information
+- Upload avatars using Supabase Storage
+- Manage preferences and settings
 
-## Local setup
+### ✅ Admin Dashboard
+- KPI cards and analytics
+- Charts with Recharts
+- User and booking management
+- Search, filter, and delete functionality
 
-1. **Install dependencies**
+### ✅ Premium UI/UX
+- Glassmorphism and gradient design
+- Framer Motion animations
+- Mobile-first responsive layout
+- Toast notifications with Sonner
+- Light/Dark mode toggle
 
-   ```bash
-   npm install
-   ```
+### ✅ Modern Tech Stack
+- Next.js 14 with App Router
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Prisma ORM with PostgreSQL
+- Supabase for database and storage
 
-2. **Configure environment**
+---
 
-   Copy `.env.example` to `.env` and fill in values from Supabase, a generated `NEXTAUTH_SECRET`, and **`SUPABASE_SERVICE_ROLE_KEY`** (needed for avatar uploads).
+## Tech Stack
 
-3. **Database schema**
+Framework: Next.js 14 (App Router)
+Language: TypeScript
+Styling: Tailwind CSS
+Animation: Framer Motion
+Database: PostgreSQL (Supabase)
+ORM: Prisma
+Authentication: NextAuth.js
+Storage: Supabase Storage
+Validation: Zod
+Forms: React Hook Form
+Charts: Recharts
+Notifications: Sonner
+Password Hashing: bcryptjs
 
-   **Option A — Prisma (recommended)**
+---
 
-   ```bash
-   npx prisma migrate dev --name init
-   ```
+## Getting Started
 
-   Or push without migration history (prototyping):
+### Prerequisites
+- Node.js 18+ installed
+- npm or yarn package manager
+- Supabase project (PostgreSQL + Storage)
 
-   ```bash
-   npx prisma db push
-   ```
+### Installation
 
-   **Option B — Supabase SQL Editor**
+Clone or navigate to the project directory:
 
-   Run `supabase/schema.sql` if you prefer raw DDL. If tables already exist from Prisma, skip conflicting statements.
+cd tripwayz
 
-4. **Seed data** (admin, 20 destinations, 100 activities)
+Install dependencies:
 
-   ```bash
-   npm run db:seed
-   ```
+npm install
 
-5. **Supabase Storage — `avatars` bucket**
+### Environment Setup
 
-   In Supabase → **Storage** → **New bucket** → name **`avatars`**, enable **Public bucket** (so profile image URLs load in the app). The SQL in `supabase/schema.sql` can also create buckets; if upload still fails, confirm the bucket exists and that **`SUPABASE_SERVICE_ROLE_KEY`** is set in `.env`, then restart `npm run dev`.
+Copy `.env.example` to `.env` and configure:
 
-6. **Run the dev server**
+DATABASE_URL=
+DIRECT_URL=
+NEXTAUTH_SECRET=your-secure-random-string
+NEXTAUTH_URL=http://localhost:3000
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
 
-   ```bash
-   npm run dev
-   ```
+### Database Setup
 
-   Open [http://localhost:3000](http://localhost:3000).
+Option 1: Run Prisma migrations
 
-## Scripts
+npx prisma migrate dev --name init
 
-| Command            | Description                              |
-| ------------------ | ---------------------------------------- |
-| `npm run dev`      | Next.js development server               |
-| `npm run build`    | `prisma generate` + production build     |
-| `npm run start`    | Start production server                  |
-| `npm run lint`     | ESLint                                   |
-| `npm run db:generate` | `prisma generate`                     |
-| `npm run db:push`  | Push schema to database (no migrations) |
-| `npm run db:migrate` | Create/apply migrations               |
-| `npm run db:seed`  | Run `prisma/seed.ts`                   |
-| `npm run db:studio`| Prisma Studio                          |
+Option 2: Push schema directly
 
-## Push to GitHub (step by step)
+npx prisma db push
 
-1. **Create a repo** on [GitHub](https://github.com/new) (e.g. `tripwayz`), empty, no README if you already have one locally.
-2. **In the project folder** (`tripwayz`), initialize git if needed:
+### Seed Database
 
-   ```bash
-   git init
-   git branch -M main
-   ```
+npm run db:seed
 
-3. **Do not commit secrets.** Confirm `.env` is listed in `.gitignore` (it should be). Never commit `.env` or keys.
-4. **Add and commit:**
+The seed script creates:
+- Admin account
+- Demo user
+- 20 destinations
+- 100 activities
+- Sample bookings
 
-   ```bash
-   git add .
-   git commit -m "Initial TripWayz app"
-   ```
+### Create Storage Bucket
 
-5. **Connect remote and push:**
+In Supabase Storage:
+- Create a new bucket named `avatars`
+- Enable Public Bucket
 
-   ```bash
-   git remote add origin https://github.com/YOUR_USER/tripwayz.git
-   git push -u origin main
-   ```
+### Start Development Server
 
-   Replace `YOUR_USER` and repo name with yours. Use SSH instead of HTTPS if you prefer.
+npm run dev
 
-## Deploy on Vercel (step by step)
+Open your browser:
 
-1. Sign in at [vercel.com](https://vercel.com/) and click **Add New… → Project**.
-2. **Import** the GitHub repository you just pushed. If prompted, install the Vercel GitHub app for that repo.
-3. **Root directory:** if the Next app lives in a subfolder (e.g. `odoo/tripwayz`), set **Root Directory** to `tripwayz` in project settings.
-4. **Framework preset:** Next.js (default). Build: `npm run build`, Output: default.
-5. **Environment variables** — add the same names as `.env.example` (Production + Preview if you use previews):
+http://localhost:3000
 
-   | Name | Example / note |
-   |------|----------------|
-   | `DATABASE_URL` | **Transaction pooler** URL (port **6543**) + `?pgbouncer=true&connection_limit=1` — see below |
-   | `NEXTAUTH_SECRET` | Long random string (required) |
-   | `NEXTAUTH_URL` | Exact site URL: `https://your-project.vercel.app` — **https**, **no trailing slash** |
-   | `NEXT_PUBLIC_SUPABASE_URL` | `https://xxxxx.supabase.co` |
-   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key from Supabase |
-   | `SUPABASE_SERVICE_ROLE_KEY` | **Service role** key (for avatar uploads only on server) |
+---
 
-6. Click **Deploy**. Set **`NEXTAUTH_URL`** to your production URL (this project: **`https://trip-wayz.vercel.app`**) with **no trailing slash**, then **Redeploy** so cookies and sign-in work.
+## Default Credentials
 
-### Why sign-up / login fails on Vercel (common fixes)
+### Admin Account
+Email: admin@tripwayz.com
+Password: Admin@123
 
-1. **`DATABASE_URL` must use the pooler on Vercel.** Serverless cannot reliably use the direct host `db.xxx.supabase.co:5432`. In Supabase go to **Project Settings → Database → Connection string**, choose **Transaction pooler**, copy the URI, and append if missing:
-   `?pgbouncer=true&connection_limit=1`  
-   Use **that** string as `DATABASE_URL` in Vercel only.
+### Demo User
+Email: demo@tripwayz.com
+Password: User@123
 
-2. **`NEXTAUTH_URL` and `NEXTAUTH_SECRET`** must be set in the Vercel project (Production). `NEXTAUTH_URL` must be `https://…vercel.app` with **no** trailing slash.
+---
 
-3. **Tables must exist in production.** From your PC, run migrations using the **direct** (port 5432) connection string so Prisma can run DDL:
+## Project Structure
 
-   ```bash
-   set DATABASE_URL=postgresql://postgres:PASSWORD@db.YOUR_REF.supabase.co:5432/postgres
-   npx prisma db push
-   ```
+tripwayz/
+├── prisma/
+│   ├── schema.prisma
+│   └── seed.ts
+├── public/
+│   └── images/
+├── src/
+│   ├── app/
+│   │   ├── admin/
+│   │   ├── api/
+│   │   ├── dashboard/
+│   │   ├── destinations/
+│   │   ├── faq/
+│   │   ├── fonts/
+│   │   ├── login/
+│   │   ├── personal-plan/
+│   │   ├── profile/
+│   │   ├── signup/
+│   │   ├── trip/
+│   │   ├── trips/
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── components/
+│   │   ├── admin/
+│   │   ├── auth/
+│   │   ├── booking/
+│   │   ├── customer/
+│   │   ├── dashboard/
+│   │   ├── landing/
+│   │   ├── profile/
+│   │   ├── trips/
+│   │   ├── providers.tsx
+│   │   └── theme-toggle.tsx
+│   ├── lib/
+│   │   ├── supabase.ts
+│   │   ├── auth-options.ts
+│   │   ├── booking-pricing.ts
+│   │   ├── constants.ts
+│   │   ├── faq-data.ts
+│   │   ├── prisma.ts
+│   │   ├── session.ts
+│   │   ├── slug.ts
+│   │   ├── vercel-env.ts
+│   │   └── types/
+│   │       └── next-auth.d.ts
+│   └── middleware.ts
+├── supabase/
+│   └── schema.sql
+├── .env.example
+├── .gitignore
+├── next.config.mjs
+├── package.json
+├── postcss.config.mjs
+├── README.md
+├── tailwind.config.ts
+└── tsconfig.json
 
-   (Use `export` on Mac/Linux.) After tables exist, keep the **pooler** URL in Vercel for the live app.
+---
 
-4. **Check the database from the deployed app:** open `https://YOUR-APP.vercel.app/api/health/db` — if you see `ok: false`, the pooler URL or password is still wrong.
+## Database Schema
 
-**After deploy:** run **`npx prisma db push`** (or `migrate deploy`) from your PC against the **direct** `5432` URL so tables exist; then seed only if you want demo users (`npm run db:seed`). Ensure the Supabase **`avatars`** bucket exists for profile photos.
+The application uses the following core models:
 
-### Remote images
+- User
+- Destination
+- Booking
+- Activity
+- Expense
+- SharedTrip
+- UserPreferences
 
-`next.config.mjs` allows **Unsplash**, **Wikimedia**, **Pexels**, and **`*.supabase.co`** storage URLs for `next/image`. Seed images use Unsplash (Unsplash License).
+---
 
-## Project structure (high level)
+## Available Scripts
 
-- `src/app` — App Router pages & API routes
-- `src/components` — UI, booking wizard, admin dashboard, forms
-- `prisma/schema.prisma` — data model
-- `prisma/seed.ts` — seed script
-- `supabase/schema.sql` — optional SQL mirror + bucket inserts
+# Development
+npm run dev          # Start development server
 
-## Security notes
+# Production
+npm run build        # Build for production
+npm run start        # Start production server
 
-- Replace permissive storage policies in `supabase/schema.sql` with authenticated, least-privilege rules before production.
-- Keep `NEXTAUTH_SECRET` private; rotate if leaked.
-- Admin deletion APIs are destructive — protect with strong admin passwords and monitoring.
+# Database
+npm run db:generate  # Generate Prisma Client
+npm run db:push      # Push schema to database
+npm run db:migrate   # Create/apply migrations
+npm run db:seed      # Seed demo data
+npm run db:studio    # Open Prisma Studio
+
+# Quality
+npm run lint         # Run ESLint
+
+---
+
+## Features Implemented
+
+### ✅ Completed
+- Authentication (Login, Signup, Protected Routes)
+- Dashboard with travel statistics
+- Destination Explorer
+- Smart Booking Wizard
+- My Trips Management
+- Public Trip Sharing
+- Profile Management with avatar upload
+- Admin Dashboard with analytics
+- Responsive UI with animations
+
+### 🚧 Planned for Future Enhancement
+- AI itinerary recommendations
+- Real-time weather integration
+- Payment gateway integration
+- PDF itinerary export
+- Email notifications
+- Multi-language support
+
+---
+
+## Design System
+
+Colors
+- Primary: Deep Blue (#0F4C81) / Teal (#0D9488)
+- Secondary: Coral (#FF6B6B) / Warm Orange (#F59E0B)
+- Neutrals: Slate 50–900
+
+Typography
+- Font: Inter
+- Headings: Bold, 4xl → xl
+- Body: Base (16px)
+
+Components
+- Rounded: 2xl (16px) for cards
+- Shadows: Soft, Card, Elevated
+- Animations: Fade-in, Slide-up, Scale-in (200–300ms)
+
+---
+
+## Seeded Data
+
+The database includes:
+- 1 Admin User (admin@tripwayz.com)
+- 1 Demo User (demo@tripwayz.com)
+- 20 Destinations
+- 100 Activities
+- Sample bookings and analytics data
+
+---
+
+## Production Deployment
+
+For deployment to Vercel:
+1. Push code to GitHub
+2. Import repository in Vercel
+3. Add environment variables
+4. Deploy
+
+Required environment variables:
+- DATABASE_URL
+- DIRECT_URL
+- NEXTAUTH_SECRET
+- NEXTAUTH_URL
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+- SUPABASE_SERVICE_ROLE_KEY
+
+---
+
+## Security Notes
+
+- Never commit `.env` files or secrets
+- Keep NEXTAUTH_SECRET private
+- Restrict Supabase Storage policies before production
+- Protect admin accounts with strong passwords
+
+---
 
 ## License
 
-Private / your organization — adjust as needed.
+Private project – All rights reserved.
+
+---
+
+Built with ❤️ using Next.js 14, TypeScript, Prisma, Supabase, and Tailwind CSS.
