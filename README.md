@@ -167,13 +167,14 @@ Password: User@123
 ---
 
 ## Project Structure
+
+```text
 tripwayz/
 ├── prisma/
-│   └── schema.prisma
-│
+│   ├── schema.prisma
+│   └── seed.ts
 ├── public/
 │   └── images/
-│
 ├── src/
 │   ├── app/
 │   │   ├── admin/
@@ -191,7 +192,6 @@ tripwayz/
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   └── page.tsx
-│   │
 │   ├── components/
 │   │   ├── admin/
 │   │   ├── auth/
@@ -203,7 +203,6 @@ tripwayz/
 │   │   ├── trips/
 │   │   ├── providers.tsx
 │   │   └── theme-toggle.tsx
-│   │
 │   ├── lib/
 │   │   ├── supabase.ts
 │   │   ├── auth-options.ts
@@ -216,12 +215,9 @@ tripwayz/
 │   │   ├── vercel-env.ts
 │   │   └── types/
 │   │       └── next-auth.d.ts
-│   │
 │   └── middleware.ts
-│
 ├── supabase/
 │   └── schema.sql
-│
 ├── .env.example
 ├── .gitignore
 ├── next.config.mjs
@@ -230,9 +226,7 @@ tripwayz/
 ├── README.md
 ├── tailwind.config.ts
 └── tsconfig.json
-
----
-
+```
 ## Database Schema
 
 The application uses the following core models:
