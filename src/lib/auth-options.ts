@@ -11,7 +11,6 @@ if (process.env.VERCEL) {
     console.warn("[next-auth] NEXTAUTH_SECRET is missing on Vercel.");
   }
 }
-
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   secret: process.env.NEXTAUTH_SECRET,
