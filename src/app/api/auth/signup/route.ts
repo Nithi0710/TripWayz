@@ -2,13 +2,11 @@ import { NextResponse } from "next/server";
 import * as bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-
 const signupSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8, "Password must be at least 8 characters"),
   name: z.string().min(1).max(120).optional(),
 });
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
