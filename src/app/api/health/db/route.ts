@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
 export const dynamic = "force-dynamic";
-
 /**
  * Quick DB connectivity check after deploy (open in browser: /api/health/db).
  */
