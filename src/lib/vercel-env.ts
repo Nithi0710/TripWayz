@@ -1,4 +1,3 @@
-
 export function nextAuthUrlHint(): string | undefined {
   const url = process.env.NEXTAUTH_URL?.trim();
   if (process.env.VERCEL && !url) {
