@@ -43,7 +43,25 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (e) {
+    console.error("[signup]", e);
+    const msg = e instanceof Error ? e.message : String(e);
+    const unreachable =
+      /P1001|ECONNREFUSED|ETIMEDOUT|MaxClients|DbHandler|connection.*(refused|timeout)/i.test(
+        msg,
+      ) ||
+      msg.includes("reach database") ||
+      msg.toLowerCase().includes("timeout");
+    if (unreachable) {
+      return NextResponse.json(
+        {
+          error:
+            "Database unreachable from this server. On Vercel use Supabase Transaction pooler URL (port 6543) and add ?pgbouncer=true&connection_limit=1 to DATABASE_URL. Open /api/health/db to verify.",
+          code: "DATABASE_UNAVAILABLE",
+        },
+        { status: 503 },
+      );
+    }
     return NextResponse.json(
       { error: "Could not create account." },
       { status: 500 },

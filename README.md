@@ -123,27 +123,35 @@ Demo user: `demo@tripwayz.com` / `User@123`
 
    | Name | Example / note |
    |------|----------------|
-   | `DATABASE_URL` | Supabase Postgres connection string |
-   | `NEXTAUTH_SECRET` | Long random string |
-   | `NEXTAUTH_URL` | `https://your-project.vercel.app` (your real Vercel URL) |
+   | `DATABASE_URL` | **Transaction pooler** URL (port **6543**) + `?pgbouncer=true&connection_limit=1` — see below |
+   | `NEXTAUTH_SECRET` | Long random string (required) |
+   | `NEXTAUTH_URL` | Exact site URL: `https://your-project.vercel.app` — **https**, **no trailing slash** |
    | `NEXT_PUBLIC_SUPABASE_URL` | `https://xxxxx.supabase.co` |
    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon key from Supabase |
    | `SUPABASE_SERVICE_ROLE_KEY` | **Service role** key (for avatar uploads only on server) |
 
-6. Click **Deploy**. After the first deploy, update **`NEXTAUTH_URL`** if Vercel assigns a different URL, then **Redeploy**.
-7. **Database:** from your PC (with production `DATABASE_URL`), run:
+6. Click **Deploy**. Set **`NEXTAUTH_URL`** to your production URL (this project: **`https://trip-wayz.vercel.app`**) with **no trailing slash**, then **Redeploy** so cookies and sign-in work.
+
+### Why sign-up / login fails on Vercel (common fixes)
+
+1. **`DATABASE_URL` must use the pooler on Vercel.** Serverless cannot reliably use the direct host `db.xxx.supabase.co:5432`. In Supabase go to **Project Settings → Database → Connection string**, choose **Transaction pooler**, copy the URI, and append if missing:
+   `?pgbouncer=true&connection_limit=1`  
+   Use **that** string as `DATABASE_URL` in Vercel only.
+
+2. **`NEXTAUTH_URL` and `NEXTAUTH_SECRET`** must be set in the Vercel project (Production). `NEXTAUTH_URL` must be `https://…vercel.app` with **no** trailing slash.
+
+3. **Tables must exist in production.** From your PC, run migrations using the **direct** (port 5432) connection string so Prisma can run DDL:
 
    ```bash
-   npx prisma migrate deploy
+   set DATABASE_URL=postgresql://postgres:PASSWORD@db.YOUR_REF.supabase.co:5432/postgres
+   npx prisma db push
    ```
 
-   Or `npx prisma db push` for prototyping. Seed only if you intend to:
+   (Use `export` on Mac/Linux.) After tables exist, keep the **pooler** URL in Vercel for the live app.
 
-   ```bash
-   npm run db:seed
-   ```
+4. **Check the database from the deployed app:** open `https://YOUR-APP.vercel.app/api/health/db` — if you see `ok: false`, the pooler URL or password is still wrong.
 
-8. **Supabase Storage:** ensure the **`avatars`** public bucket exists; avatar uploads use the service role on the server, so no browser CORS issue for the key.
+**After deploy:** run **`npx prisma db push`** (or `migrate deploy`) from your PC against the **direct** `5432` URL so tables exist; then seed only if you want demo users (`npm run db:seed`). Ensure the Supabase **`avatars`** bucket exists for profile photos.
 
 ### Remote images
 

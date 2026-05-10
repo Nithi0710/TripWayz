@@ -2,6 +2,15 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import * as bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { nextAuthUrlHint } from "@/lib/vercel-env";
+
+if (process.env.VERCEL) {
+  const hint = nextAuthUrlHint();
+  if (hint) console.warn("[next-auth]", hint);
+  if (!process.env.NEXTAUTH_SECRET) {
+    console.warn("[next-auth] NEXTAUTH_SECRET is missing on Vercel.");
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
@@ -21,21 +30,26 @@ export const authOptions: NextAuthOptions = {
         const password = credentials?.password;
         if (!email || !password) return null;
 
-        const user = await prisma.user.findUnique({
-          where: { email },
-          include: { profile: true },
-        });
-        if (!user) return null;
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email },
+            include: { profile: true },
+          });
+          if (!user) return null;
 
-        const ok = await bcrypt.compare(password, user.passwordHash);
-        if (!ok) return null;
+          const ok = await bcrypt.compare(password, user.passwordHash);
+          if (!ok) return null;
 
-        return {
-          id: user.id,
-          email: user.email,
-          role: user.role,
-          name: user.profile?.name ?? undefined,
-        };
+          return {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            name: user.profile?.name ?? undefined,
+          };
+        } catch (e) {
+          console.error("[next-auth authorize] database error:", e);
+          return null;
+        }
       },
     }),
   ],
